@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Your Session - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 87.5%;"></div>
+        </div>
+
+        <div style="padding-top: 1rem;">
+            <h1>How was your session?</h1>
+            <p>Help us understand what worked (and what didn't)</p>
+
+            <div class="form-group" style="margin-top: 2rem;">
+                <label>Which AI did you use?</label>
+                <div class="card-grid three-col" style="margin-top: 0.75rem;">
+                    <div class="card"
+                        onclick="saveState({score: {...getState().score, ai: 'claude'}}); this.parentElement.querySelectorAll('.card').forEach(c => c.classList.remove('selected')); this.classList.add('selected'); checkScoreComplete();">
+                        <div class="card-title">Claude</div>
+                    </div>
+                    <div class="card"
+                        onclick="saveState({score: {...getState().score, ai: 'chatgpt'}}); this.parentElement.querySelectorAll('.card').forEach(c => c.classList.remove('selected')); this.classList.add('selected'); checkScoreComplete();">
+                        <div class="card-title">ChatGPT</div>
+                    </div>
+                    <div class="card"
+                        onclick="saveState({score: {...getState().score, ai: 'gemini'}}); this.parentElement.querySelectorAll('.card').forEach(c => c.classList.remove('selected')); this.classList.add('selected'); checkScoreComplete();">
+                        <div class="card-title">Gemini</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rating-group">
+                <label>Personality Read</label>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Did it understand
+                    who you are?</p>
+                <div class="stars">
+                    <span class="star" onclick="setRating('personalityRead', 1)">★</span>
+                    <span class="star" onclick="setRating('personalityRead', 2)">★</span>
+                    <span class="star" onclick="setRating('personalityRead', 3)">★</span>
+                    <span class="star" onclick="setRating('personalityRead', 4)">★</span>
+                    <span class="star" onclick="setRating('personalityRead', 5)">★</span>
+                </div>
+            </div>
+
+            <div class="rating-group">
+                <label>Strategic Insight</label>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Did it give you
+                    real strategic value?</p>
+                <div class="stars">
+                    <span class="star" onclick="setRating('strategicInsight', 1)">★</span>
+                    <span class="star" onclick="setRating('strategicInsight', 2)">★</span>
+                    <span class="star" onclick="setRating('strategicInsight', 3)">★</span>
+                    <span class="star" onclick="setRating('strategicInsight', 4)">★</span>
+                    <span class="star" onclick="setRating('strategicInsight', 5)">★</span>
+                </div>
+            </div>
+
+            <div class="rating-group">
+                <label>Harsh Honesty</label>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Did it challenge
+                    your assumptions?</p>
+                <div class="stars">
+                    <span class="star" onclick="setRating('harshHonesty', 1)">★</span>
+                    <span class="star" onclick="setRating('harshHonesty', 2)">★</span>
+                    <span class="star" onclick="setRating('harshHonesty', 3)">★</span>
+                    <span class="star" onclick="setRating('harshHonesty', 4)">★</span>
+                    <span class="star" onclick="setRating('harshHonesty', 5)">★</span>
+                </div>
+            </div>
+
+            <div class="rating-group">
+                <label>Actionability</label>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Did you know what
+                    to do next?</p>
+                <div class="stars">
+                    <span class="star" onclick="setRating('actionability', 1)">★</span>
+                    <span class="star" onclick="setRating('actionability', 2)">★</span>
+                    <span class="star" onclick="setRating('actionability', 3)">★</span>
+                    <span class="star" onclick="setRating('actionability', 4)">★</span>
+                    <span class="star" onclick="setRating('actionability', 5)">★</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <a href="step-results.html" id="nextBtn" class="btn btn-primary btn-disabled">
+                    See Your Results <span class="icon-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Load saved ratings on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const state = getState();
+
+            // Restore AI selection
+            if (state.score.ai) {
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    if (card.textContent.trim().toLowerCase() === state.score.ai.toLowerCase()) {
+                        card.classList.add('selected');
+                    }
+                });
+            }
+
+            // Restore star ratings
+            const metrics = ['personalityRead', 'strategicInsight', 'harshHonesty', 'actionability'];
+            metrics.forEach(metric => {
+                if (state.score[metric] > 0) {
+                    const ratingGroup = Array.from(document.querySelectorAll('.rating-group')).find(
+                        group => group.querySelector('label').textContent.replace(/\s+/g, '').toLowerCase().includes(metric.toLowerCase().replace('read', ''))
+                    );
+                    if (ratingGroup) {
+                        const stars = ratingGroup.querySelectorAll('.star');
+                        stars.forEach((star, index) => {
+                            if (index < state.score[metric]) {
+                                star.classList.add('filled');
+                            }
+                        });
+                    }
+                }
+            });
+
+            checkScoreComplete();
+        });
+    </script>
+</body>
+
+</html>

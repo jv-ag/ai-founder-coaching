@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Superpower - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 25%;"></div>
+        </div>
+
+        <div class="center-content">
+            <h1>What's your superpower?</h1>
+            <p>What do you do better than most?</p>
+
+            <div class="card-grid">
+                <div class="card"
+                    onclick="saveState({superpower: 'selling'}); selectCard('selling', 'step-validation.html')">
+                    <div class="card-title">Selling / Hustling</div>
+                    <div class="card-subtitle">I can sell anything</div>
+                </div>
+
+                <div class="card"
+                    onclick="saveState({superpower: 'building'}); selectCard('building', 'step-validation.html')">
+                    <div class="card-title">Building Things</div>
+                    <div class="card-subtitle">I ship products fast</div>
+                </div>
+
+                <div class="card"
+                    onclick="saveState({superpower: 'industry'}); selectCard('industry', 'step-validation.html')">
+                    <div class="card-title">Industry Knowledge</div>
+                    <div class="card-subtitle">I know this space cold</div>
+                </div>
+
+                <div class="card"
+                    onclick="saveState({superpower: 'design'}); selectCard('design', 'step-validation.html')">
+                    <div class="card-title">Design / Creativity</div>
+                    <div class="card-subtitle">I make things beautiful</div>
+                </div>
+
+                <div class="card"
+                    onclick="saveState({superpower: 'operations'}); selectCard('operations', 'step-validation.html')">
+                    <div class="card-title">Operations / Process</div>
+                    <div class="card-subtitle">I optimize everything</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-row mt-auto" style="margin-bottom: 20px;">
+            <a href="step-profile.html" class="btn btn-secondary" style="width: 48%">Back</a>
+            <button class="btn btn-primary btn-disabled" style="width: 48%">
+                Next <span class="icon-arrow">→</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

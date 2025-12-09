@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Personalized Prompt - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 75%;"></div>
+        </div>
+
+        <div style="padding-top: 1rem;">
+            <h1>Your Personalized Coaching Prompt</h1>
+            <p>Copy this and paste it into your favorite AI to get coaching that actually gets you.</p>
+
+            <div style="position: relative;">
+                <div class="code-block" id="promptDisplay"></div>
+                <button class="copy-btn"
+                    onclick="copyToClipboard(document.getElementById('promptDisplay').textContent)">
+                    Copy
+                </button>
+            </div>
+
+            <div style="margin-top: 1.5rem; margin-bottom: 1rem;">
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Open in:</p>
+                <div class="ai-links">
+                    <a href="#" class="ai-link" onclick="event.preventDefault(); openAI('claude')">Claude</a>
+                    <a href="#" class="ai-link" onclick="event.preventDefault(); openAI('chatgpt')">ChatGPT</a>
+                    <a href="#" class="ai-link" onclick="event.preventDefault(); openAI('gemini')">Gemini</a>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="font-size: 0.95rem; margin-bottom: 1rem;">Done with your session?</p>
+                <a href="step-score.html" class="btn btn-primary">
+                    Score Your Session <span class="icon-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="prompts.js"></script>
+    <script>
+        // Generate and display prompt on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const prompt = generateAndSavePrompt();
+            document.getElementById('promptDisplay').textContent = prompt;
+        });
+    </script>
+</body>
+
+</html>

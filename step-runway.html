@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Runway - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 50%;"></div>
+        </div>
+
+        <div class="center-content">
+            <h1>How long can you work on this?</h1>
+            <p>Realistically, with your current situation</p>
+
+            <div class="card-grid">
+                <div class="card"
+                    onclick="saveState({runway: 'nights-weekends'}); selectCard('nights-weekends', 'step-pitch.html')">
+                    <div class="card-title">Nights & Weekends</div>
+                    <div class="card-subtitle">Side hustle mode</div>
+                </div>
+
+                <div class="card"
+                    onclick="saveState({runway: 'few-months'}); selectCard('few-months', 'step-pitch.html')">
+                    <div class="card-title">A Few Months</div>
+                    <div class="card-subtitle">Limited runway</div>
+                </div>
+
+                <div class="card"
+                    onclick="saveState({runway: 'full-time-6mo'}); selectCard('full-time-6mo', 'step-pitch.html')">
+                    <div class="card-title">Full-Time 6mo+</div>
+                    <div class="card-subtitle">All in</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-row mt-auto" style="margin-bottom: 20px;">
+            <a href="step-validation.html" class="btn btn-secondary" style="width: 48%">Back</a>
+            <button class="btn btn-primary btn-disabled" style="width: 48%">
+                Next <span class="icon-arrow">→</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

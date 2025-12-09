@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Pitch - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 62.5%;"></div>
+        </div>
+
+        <div class="center-content">
+            <h1>Tell me about your idea</h1>
+            <p>Just a few sentences each - this helps personalize your prompt</p>
+
+            <form class="flex-col" onsubmit="event.preventDefault();">
+                <div class="form-group">
+                    <label for="problem">What problem are you solving?</label>
+                    <textarea id="problem" placeholder="e.g., Small businesses waste hours on manual invoicing..."
+                        oninput="checkPitchComplete()"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="who">Who has this problem?</label>
+                    <textarea id="who" placeholder="e.g., Freelance designers and consultants..."
+                        oninput="checkPitchComplete()"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="fear">What's your biggest fear right now?</label>
+                    <textarea id="fear" placeholder="e.g., Building something nobody wants..."
+                        oninput="checkPitchComplete()"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <div class="flex-row mt-auto" style="margin-bottom: 20px;">
+            <a href="step-runway.html" class="btn btn-secondary" style="width: 48%">Back</a>
+            <a href="step-prompt.html" id="nextBtn" class="btn btn-primary btn-disabled" style="width: 48%"
+                onclick="savePitch()">
+                Next <span class="icon-arrow">→</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Load saved pitch on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPitch();
+            checkPitchComplete();
+        });
+    </script>
+</body>
+
+</html>

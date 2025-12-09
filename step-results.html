@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Results - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+
+        <div style="padding-top: 1rem; text-align: center;">
+            <h1>Your Self-Awareness Score</h1>
+
+            <div class="percentile-badge" id="percentileBadge"></div>
+
+            <div class="chart-container">
+                <svg class="bell-curve" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Bell curve path -->
+                    <path d="M 20 180 Q 50 180, 80 140 T 140 80 T 200 40 T 260 80 T 320 140 T 380 180" fill="none"
+                        stroke="#D1D5DB" stroke-width="2" />
+
+                    <!-- Filled area under curve -->
+                    <path
+                        d="M 20 180 Q 50 180, 80 140 T 140 80 T 200 40 T 260 80 T 320 140 T 380 180 L 380 180 L 20 180 Z"
+                        fill="#F3F4F6" opacity="0.5" />
+
+                    <!-- User position marker -->
+                    <line id="userMarker" x1="200" y1="40" x2="200" y2="190" stroke="#1F2937" stroke-width="3"
+                        stroke-dasharray="5,5" />
+
+                    <circle id="userDot" cx="200" cy="40" r="6" fill="#1F2937" />
+
+                    <!-- Label -->
+                    <text id="userLabel" x="200" y="25" text-anchor="middle" font-size="14" font-weight="600"
+                        fill="#1F2937">You</text>
+                </svg>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 12px; text-align: left;">
+                <h2 style="font-size: 1.125rem; margin-bottom: 1rem;">What This Means</h2>
+                <p id="interpretation" style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;"></p>
+            </div>
+
+            <!-- Optional: Email capture for real comparison (commented out for MVP) -->
+            <!--
+            <div style="margin-top: 2rem; padding: 1.5rem; background: #FEF3C7; border-radius: 12px;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Want Real Comparison Data?</h3>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    See how you compare to 847 other founders
+                </p>
+                <input type="email" placeholder="your@email.com" style="margin-bottom: 0.75rem;">
+                <button class="btn btn-primary">Get Full Report</button>
+            </div>
+            -->
+
+            <div style="margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="restartFlow()">
+                    Start New Session
+                </button>
+                <button class="btn btn-ghost" onclick="window.location.href='step-prompt.html'"
+                    style="margin-top: 0.75rem;">
+                    View My Prompt Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const percentile = calculatePercentile();
+            saveState({ percentile, completedAt: new Date().toISOString() });
+
+            // Display percentile
+            const suffix = percentile === 1 ? 'st' : percentile === 2 ? 'nd' : percentile === 3 ? 'rd' : 'th';
+            document.getElementById('percentileBadge').textContent = `${percentile}${suffix} Percentile`;
+
+            // Position marker on bell curve (map percentile to x position)
+            const xPosition = 20 + (percentile / 100) * 360;
+
+            // Calculate approximate y position on bell curve
+            const normalizedX = (xPosition - 200) / 100;
+            const yPosition = 40 + (normalizedX * normalizedX) * 100;
+
+            document.getElementById('userMarker').setAttribute('x1', xPosition);
+            document.getElementById('userMarker').setAttribute('x2', xPosition);
+            document.getElementById('userMarker').setAttribute('y2', 190);
+            document.getElementById('userDot').setAttribute('cx', xPosition);
+            document.getElementById('userDot').setAttribute('cy', yPosition);
+            document.getElementById('userLabel').setAttribute('x', xPosition);
+
+            // Generate interpretation
+            let interpretation = '';
+            if (percentile >= 80) {
+                interpretation = 'You\'re in the top tier of founder self-awareness. You understand the importance of getting honest feedback and challenging your assumptions. This puts you ahead of most founders who build in echo chambers.';
+            } else if (percentile >= 60) {
+                interpretation = 'You\'re above average in founder self-awareness. You\'re actively seeking feedback and willing to question your ideas. Keep pushing for more brutal honesty - it\'s your competitive advantage.';
+            } else if (percentile >= 40) {
+                interpretation = 'You\'re in the middle of the pack. You\'re taking steps to validate your ideas, but there\'s room to be more aggressive about seeking harsh feedback and challenging your core assumptions.';
+            } else if (percentile >= 20) {
+                interpretation = 'You\'re early in your validation journey. Focus on talking to more real customers and getting honest feedback about whether they\'d actually pay. Avoid building until you have stronger signals.';
+            } else {
+                interpretation = 'You\'re at the beginning of your founder journey. That\'s okay - everyone starts here. Your next step: talk to 10 potential customers this week. Don\'t pitch, just listen to their problems.';
+            }
+
+            document.getElementById('interpretation').textContent = interpretation;
+        });
+    </script>
+</body>
+
+</html>

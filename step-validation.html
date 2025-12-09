@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Status - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 37.5%;"></div>
+        </div>
+
+        <div class="center-content">
+            <h2>Talked to potential customers?</h2>
+
+            <div class="card-grid three-col" style="margin-bottom: 2.5rem;">
+                <div class="card" onclick="selectMultiCard('customerConvos', 'none')">
+                    <div class="card-title">Nope</div>
+                    <div class="card-subtitle">Just me</div>
+                </div>
+
+                <div class="card" onclick="selectMultiCard('customerConvos', 'few')">
+                    <div class="card-title">A few</div>
+                    <div class="card-subtitle">Friends mostly</div>
+                </div>
+
+                <div class="card" onclick="selectMultiCard('customerConvos', 'validated')">
+                    <div class="card-title">10+ real</div>
+                    <div class="card-subtitle">Actual convos</div>
+                </div>
+            </div>
+
+            <h2>Would anyone pay?</h2>
+
+            <div class="card-grid three-col">
+                <div class="card" onclick="selectMultiCard('willingToPay', 'no-idea')">
+                    <div class="card-title">No idea</div>
+                    <div class="card-subtitle">Haven't asked</div>
+                </div>
+
+                <div class="card" onclick="selectMultiCard('willingToPay', 'sounds-cool')">
+                    <div class="card-title">"Sounds cool"</div>
+                    <div class="card-subtitle">Positive vibes</div>
+                </div>
+
+                <div class="card" onclick="selectMultiCard('willingToPay', 'yes')">
+                    <div class="card-title">Someone said YES</div>
+                    <div class="card-subtitle">Real interest</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-row mt-auto" style="margin-bottom: 20px;">
+            <a href="step-superpower.html" class="btn btn-secondary" style="width: 48%">Back</a>
+            <a href="step-runway.html" id="nextBtn" class="btn btn-primary btn-disabled" style="width: 48%">
+                Next <span class="icon-arrow">→</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
