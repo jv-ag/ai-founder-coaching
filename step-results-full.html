@@ -68,10 +68,19 @@
                 <button class="btn btn-primary" onclick="restartFlow()">
                     Start New Session
                 </button>
-                <button class="btn btn-ghost" onclick="window.location.href='step-prompt.html'"
-                    style="margin-top: 0.75rem;">
-                    View My Prompt Again
-                </button>
+
+                <div
+                    style="margin-top: 1.5rem; padding: 1rem; background: #F3F4F6; border-radius: 8px; text-align: center;">
+                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                        Want your prompt emailed to you?
+                    </p>
+                    <button class="btn btn-secondary" onclick="emailPrompt()" style="font-size: 0.875rem;">
+                        📧 Email Me the Prompt
+                    </button>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 0;">
+                        We'll send it to the email you provided. No spam, just your prompt.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -165,6 +174,36 @@
             });
 
             container.innerHTML = html;
+        }
+
+        function emailPrompt() {
+            const state = getState();
+            const email = state.email;
+            const prompt = state.generatedPrompt;
+
+            if (!email) {
+                alert('No email found. Please complete the flow again.');
+                return;
+            }
+
+            // For MVP: Use mailto as fallback
+            // In production: This would trigger a backend email send via Resend/SendGrid
+            const subject = encodeURIComponent('Your AI Founder Coaching Prompt');
+            const body = encodeURIComponent(
+                `Here's your personalized AI coaching prompt:\n\n${prompt}\n\n` +
+                `---\n\n` +
+                `Want to improve your score? Focus on:\n` +
+                `- Talking to more real customers (not just friends)\n` +
+                `- Getting commitments to pay, not just "sounds cool"\n\n` +
+                `Good luck building!\n\n` +
+                `P.S. Reply to this email if you want 1-on-1 coaching.`
+            );
+
+            // Show confirmation
+            alert(`We'll send your prompt to ${email}\n\n(For MVP: This opens your email client. In production, we'll send it automatically via our email service.)`);
+
+            // Open mailto link
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
     </script>
 </body>
