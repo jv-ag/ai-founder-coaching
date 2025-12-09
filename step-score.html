@@ -22,7 +22,7 @@
             <p>Help us understand what worked (and what didn't)</p>
 
             <div class="form-group" style="margin-top: 2rem;">
-                <label>Which AI did you use?</label>
+                <label>Which AI did you use? <span style="color: var(--error-color);">*</span></label>
                 <div class="card-grid three-col" style="margin-top: 0.75rem;">
                     <div class="card"
                         onclick="saveState({score: {...getState().score, ai: 'claude'}}); this.parentElement.querySelectorAll('.card').forEach(c => c.classList.remove('selected')); this.classList.add('selected'); checkScoreComplete();">
@@ -37,6 +37,10 @@
                         <div class="card-title">Gemini</div>
                     </div>
                 </div>
+                <p
+                    style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 0; text-align: left;">
+                    Select an AI and rate all 4 metrics to continue
+                </p>
             </div>
 
             <div class="rating-group">
