@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Results - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+
+        <div style="padding-top: 1rem; text-align: center;">
+            <h1>Your Self-Awareness Assessment</h1>
+
+            <div style="margin: 2rem 0;">
+                <div class="percentile-badge" id="avgScoreBadge"></div>
+            </div>
+
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 2rem 0; text-align: left;">
+                <p id="interpretation"
+                    style="color: var(--text-color); font-size: 0.95rem; line-height: 1.6; margin: 0;"></p>
+            </div>
+
+            <!-- Email Gate -->
+            <div
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 12px; margin: 2rem 0; color: white;">
+                <h2 style="color: white; margin-bottom: 1rem;">Want to see how you compare?</h2>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                    Get your percentile rank + see which AI performs best for founders like you
+                </p>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <input type="email" id="emailInput" placeholder="your@email.com"
+                        style="width: 100%; text-align: center;" oninput="checkEmailValid()">
+                </div>
+
+                <button id="unlockBtn" class="btn btn-primary btn-disabled"
+                    style="background: white; color: #667eea; font-weight: 600;" onclick="unlockResults()">
+                    See My Rank →
+                </button>
+
+                <p style="font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-top: 1rem; margin-bottom: 0;">
+                    🔒 We'll never spam you. Unsubscribe anytime.
+                </p>
+            </div>
+
+            <button class="btn btn-ghost" onclick="restartFlow()" style="margin-top: 1rem;">
+                Start New Session
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const state = getState();
+
+            // Calculate average score from ratings
+            const avgScore = (
+                state.score.personalityRead +
+                state.score.strategicInsight +
+                state.score.harshHonesty +
+                state.score.actionability
+            ) / 4;
+
+            // Display average
+            document.getElementById('avgScoreBadge').textContent = `${avgScore.toFixed(1)} / 5 Stars`;
+
+            // Generate interpretation based on assessment answers
+            let interpretation = '';
+
+            // Based on validation status
+            if (state.validation.customerConvos === 'validated' && state.validation.willingToPay === 'yes') {
+                interpretation = 'You\'re ahead of the curve. You\'ve validated your problem with real customers and have commitment to pay. This level of validation puts you in the top tier of founders who actually test their assumptions before building.';
+            } else if (state.validation.customerConvos === 'few' || state.validation.willingToPay === 'sounds-cool') {
+                interpretation = 'You\'re on the right track. You\'re seeking feedback, but you need stronger validation signals. Focus on getting 10+ real customer conversations and explicit willingness to pay before building.';
+            } else {
+                interpretation = 'You\'re at the beginning of your validation journey. Most founders skip this step and build in a vacuum. The fact that you\'re here shows self-awareness. Your next step: talk to 10 potential customers this week.';
+            }
+
+            // Add context based on runway
+            if (state.runway === 'full-time-6mo') {
+                interpretation += ' With 6+ months of runway, you have time to validate properly - use it wisely.';
+            } else if (state.runway === 'nights-weekends') {
+                interpretation += ' Nights and weekends mode means you need to be extra focused on validation before investing precious time building.';
+            }
+
+            document.getElementById('interpretation').textContent = interpretation;
+        });
+
+        function checkEmailValid() {
+            const email = document.getElementById('emailInput').value;
+            const btn = document.getElementById('unlockBtn');
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (regex.test(email)) {
+                btn.classList.remove('btn-disabled');
+            } else {
+                btn.classList.add('btn-disabled');
+            }
+        }
+
+        function unlockResults() {
+            const email = document.getElementById('emailInput').value;
+
+            // Save email to state
+            saveState({ email: email });
+
+            // Navigate to full results
+            window.location.href = 'step-results-full.html';
+        }
+    </script>
+</body>
+
+</html>
