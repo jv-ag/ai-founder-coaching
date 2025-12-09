@@ -50,17 +50,19 @@
                 <p id="interpretation" style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;"></p>
             </div>
 
-            <!-- Optional: Email capture for real comparison (commented out for MVP) -->
-            <!--
-            <div style="margin-top: 2rem; padding: 1.5rem; background: #FEF3C7; border-radius: 12px;">
-                <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Want Real Comparison Data?</h3>
-                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                    See how you compare to 847 other founders
+            <!-- AI Performance Comparison -->
+            <div style="margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 12px; text-align: left;">
+                <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem;">📊 How Do AIs Compare?</h2>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Based on 847 founder sessions
                 </p>
-                <input type="email" placeholder="your@email.com" style="margin-bottom: 0.75rem;">
-                <button class="btn btn-primary">Get Full Report</button>
+
+                <div id="aiComparison"></div>
+
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 1.5rem; font-style: italic;">
+                    💡 Want to try a different AI? Start a new session to compare performance.
+                </p>
             </div>
-            -->
 
             <div style="margin-top: 2rem;">
                 <button class="btn btn-primary" onclick="restartFlow()">
@@ -75,6 +77,7 @@
     </div>
 
     <script src="app.js"></script>
+    <script src="ai-data.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             const percentile = calculatePercentile();
@@ -113,7 +116,56 @@
             }
 
             document.getElementById('interpretation').textContent = interpretation;
+
+            // Render AI comparison
+            renderAIComparison();
         });
+
+        function renderAIComparison() {
+            const container = document.getElementById('aiComparison');
+            const ais = ['claude', 'chatgpt', 'gemini'];
+            const aiNames = {
+                claude: 'Claude',
+                chatgpt: 'ChatGPT',
+                gemini: 'Gemini'
+            };
+
+            let html = '';
+
+            ais.forEach((ai, index) => {
+                const data = getAIPerformance(ai);
+                if (!data) return;
+
+                html += `
+                    <div style="margin-bottom: ${index < ais.length - 1 ? '1.5rem' : '0'}; padding-bottom: ${index < ais.length - 1 ? '1.5rem' : '0'}; border-bottom: ${index < ais.length - 1 ? '1px solid var(--input-border)' : 'none'};">
+                        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem;">${aiNames[ai]}</h3>
+                        <div style="display: grid; gap: 0.5rem; font-size: 0.875rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-secondary);">Personality Read:</span>
+                                <span>${renderStars(data.personalityRead)} <strong>${data.personalityRead.toFixed(1)}/5</strong></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-secondary);">Strategic Insight:</span>
+                                <span>${renderStars(data.strategicInsight)} <strong>${data.strategicInsight.toFixed(1)}/5</strong></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-secondary);">Harsh Honesty:</span>
+                                <span>${renderStars(data.harshHonesty)} <strong>${data.harshHonesty.toFixed(1)}/5</strong></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-secondary);">Actionability:</span>
+                                <span>${renderStars(data.actionability)} <strong>${data.actionability.toFixed(1)}/5</strong></span>
+                            </div>
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 0;">
+                            Based on ${data.totalSessions} sessions
+                        </p>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
     </script>
 </body>
 
