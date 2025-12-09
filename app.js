@@ -46,7 +46,7 @@ function selectCard(value, nextPage) {
   const cards = document.querySelectorAll('.card');
   cards.forEach(card => card.classList.remove('selected'));
   event.target.closest('.card').classList.add('selected');
-  
+
   // Auto-advance after brief delay
   setTimeout(() => {
     window.location.href = nextPage;
@@ -57,12 +57,12 @@ function selectCard(value, nextPage) {
 function selectMultiCard(questionKey, value) {
   const card = event.target.closest('.card');
   card.classList.add('selected');
-  
+
   // Store in state
   const state = getState();
   state.validation[questionKey] = value;
   saveState(state);
-  
+
   // Check if both questions answered
   checkValidationComplete();
 }
@@ -82,7 +82,7 @@ function setRating(metric, rating) {
   const state = getState();
   state.score[metric] = rating;
   saveState(state);
-  
+
   // Update UI
   const container = event.target.closest('.rating-group');
   const stars = container.querySelectorAll('.star');
@@ -93,18 +93,18 @@ function setRating(metric, rating) {
       star.classList.remove('filled');
     }
   });
-  
+
   checkScoreComplete();
 }
 
 function checkScoreComplete() {
   const state = getState();
-  const allRated = state.score.ai && 
-                   state.score.personalityRead > 0 &&
-                   state.score.strategicInsight > 0 &&
-                   state.score.harshHonesty > 0 &&
-                   state.score.actionability > 0;
-  
+  const allRated = state.score.ai &&
+    state.score.personalityRead > 0 &&
+    state.score.strategicInsight > 0 &&
+    state.score.harshHonesty > 0 &&
+    state.score.actionability > 0;
+
   if (allRated) {
     const nextBtn = document.getElementById('nextBtn');
     if (nextBtn) {
@@ -113,22 +113,55 @@ function checkScoreComplete() {
   }
 }
 
-// Copy to Clipboard
+// Copy to Clipboard with Mobile Fallback
 async function copyToClipboard(text) {
+  const btn = event.target;
+  const originalText = btn.textContent;
+
   try {
+    // Try modern Clipboard API first
     await navigator.clipboard.writeText(text);
-    const btn = event.target;
-    const originalText = btn.textContent;
     btn.textContent = '✓ Copied!';
     btn.classList.add('copied');
-    
+
     setTimeout(() => {
       btn.textContent = originalText;
       btn.classList.remove('copied');
     }, 2000);
   } catch (err) {
-    console.error('Failed to copy:', err);
-    alert('Failed to copy. Please select and copy manually.');
+    // Fallback for mobile browsers (iOS Safari, etc.)
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      } else {
+        throw new Error('execCommand failed');
+      }
+    } catch (fallbackErr) {
+      console.error('Copy failed:', fallbackErr);
+      // Show user-friendly message
+      btn.textContent = 'Long-press to copy';
+      setTimeout(() => {
+        btn.textContent = originalText;
+      }, 3000);
+    } finally {
+      document.body.removeChild(textArea);
+    }
   }
 }
 
@@ -146,7 +179,7 @@ function savePitch() {
   const problem = document.getElementById('problem').value;
   const who = document.getElementById('who').value;
   const fear = document.getElementById('fear').value;
-  
+
   saveState({
     pitch: { problem, who, fear }
   });
@@ -157,7 +190,7 @@ function loadPitch() {
   const problemInput = document.getElementById('problem');
   const whoInput = document.getElementById('who');
   const fearInput = document.getElementById('fear');
-  
+
   if (problemInput && state.pitch.problem) problemInput.value = state.pitch.problem;
   if (whoInput && state.pitch.who) whoInput.value = state.pitch.who;
   if (fearInput && state.pitch.fear) fearInput.value = state.pitch.fear;
@@ -167,7 +200,7 @@ function checkPitchComplete() {
   const problem = document.getElementById('problem').value.trim();
   const who = document.getElementById('who').value.trim();
   const fear = document.getElementById('fear').value.trim();
-  
+
   const nextBtn = document.getElementById('nextBtn');
   if (problem && who && fear) {
     nextBtn.classList.remove('btn-disabled');
@@ -180,16 +213,16 @@ function checkPitchComplete() {
 function openAI(platform) {
   const state = getState();
   const prompt = state.generatedPrompt;
-  
+
   const urls = {
     claude: 'https://claude.ai/new',
     chatgpt: 'https://chat.openai.com/',
     gemini: 'https://gemini.google.com/'
   };
-  
+
   // Copy prompt first
   navigator.clipboard.writeText(prompt).catch(err => console.error('Copy failed:', err));
-  
+
   // Open platform
   window.open(urls[platform], '_blank');
 }
@@ -203,7 +236,7 @@ function calculatePercentile() {
     state.score.harshHonesty +
     state.score.actionability
   ) / 4;
-  
+
   // Map 1-5 star average to percentile (fake but realistic)
   // 5 stars = top 10%, 4 stars = top 30%, 3 stars = 50%, etc.
   const percentileMap = {
@@ -213,7 +246,7 @@ function calculatePercentile() {
     2: Math.floor(Math.random() * 25) + 15,  // 15-39th
     1: Math.floor(Math.random() * 15) + 1    // 1-14th
   };
-  
+
   const roundedAvg = Math.round(avgScore);
   return percentileMap[roundedAvg] || 50;
 }
