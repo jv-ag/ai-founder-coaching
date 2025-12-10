@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return with Data - AI Founder Coaching</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 50%;"></div>
+        </div>
+
+        <div style="padding-top: 1rem;">
+            <h1>Welcome Back! 🎉</h1>
+            <p>You went out and talked to customers. Let's hear what you learned.</p>
+
+            <div class="form-group" style="margin-top: 2rem;">
+                <label>What did you learn from customer conversations?</label>
+                <textarea id="customerInsights" rows="4"
+                    placeholder="What problems did they actually have? What surprised you? What patterns emerged?"
+                    style="margin-top: 0.5rem;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Did anything surprise you?</label>
+                <textarea id="surprises" rows="3" placeholder="What did customers say that you didn't expect?"
+                    style="margin-top: 0.5rem;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Are you pivoting?</label>
+                <div class="card-grid two-col" style="margin-top: 0.75rem;">
+                    <div class="card" onclick="handlePivot(false)">
+                        <div class="card-title">No</div>
+                        <div class="card-description">Same problem, same solution</div>
+                    </div>
+                    <div class="card" onclick="handlePivot(true)">
+                        <div class="card-title">Yes</div>
+                        <div class="card-description">Changing direction</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="pivotReasonGroup" style="display: none;">
+                <label>Why are you pivoting?</label>
+                <textarea id="pivotReason" rows="3" placeholder="What did you learn that made you change direction?"
+                    style="margin-top: 0.5rem;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Is the problem validated now?</label>
+                <div class="card-grid two-col" style="margin-top: 0.75rem;">
+                    <div class="card" onclick="selectValidation('uncertain')">
+                        <div class="card-title">Still Uncertain</div>
+                        <div class="card-description">Need more conversations</div>
+                    </div>
+                    <div class="card" onclick="selectValidation('validated')">
+                        <div class="card-title">Yes - Someone Will Pay</div>
+                        <div class="card-description">Ready to build</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <button id="nextBtn" class="btn btn-primary btn-disabled" onclick="submitReturn()">
+                    Continue <span class="icon-arrow">→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        let isPivoting = false;
+        let validationStatus = null;
+
+        function handlePivot(pivoting) {
+            isPivoting = pivoting;
+
+            // Update UI
+            const cards = event.target.closest('.card-grid').querySelectorAll('.card');
+            cards.forEach(card => card.classList.remove('selected'));
+            event.target.closest('.card').classList.add('selected');
+
+            // Show/hide pivot reason
+            const pivotReasonGroup = document.getElementById('pivotReasonGroup');
+            if (pivoting) {
+                pivotReasonGroup.style.display = 'block';
+            } else {
+                pivotReasonGroup.style.display = 'none';
+                document.getElementById('pivotReason').value = '';
+            }
+
+            checkComplete();
+        }
+
+        function selectValidation(status) {
+            validationStatus = status;
+
+            // Update UI
+            const cards = event.target.closest('.card-grid').querySelectorAll('.card');
+            cards.forEach(card => card.classList.remove('selected'));
+            event.target.closest('.card').classList.add('selected');
+
+            checkComplete();
+        }
+
+        function checkComplete() {
+            const customerInsights = document.getElementById('customerInsights').value.trim();
+            const surprises = document.getElementById('surprises').value.trim();
+            const pivotReason = isPivoting ? document.getElementById('pivotReason').value.trim() : 'n/a';
+
+            const isComplete = customerInsights && surprises && validationStatus !== null &&
+                (!isPivoting || pivotReason);
+
+            const nextBtn = document.getElementById('nextBtn');
+            if (isComplete) {
+                nextBtn.classList.remove('btn-disabled');
+            } else {
+                nextBtn.classList.add('btn-disabled');
+            }
+        }
+
+        // Add input listeners
+        document.getElementById('customerInsights').addEventListener('input', checkComplete);
+        document.getElementById('surprises').addEventListener('input', checkComplete);
+        document.getElementById('pivotReason').addEventListener('input', checkComplete);
+
+        function submitReturn() {
+            const customerInsights = document.getElementById('customerInsights').value.trim();
+            const surprises = document.getElementById('surprises').value.trim();
+            const pivotReason = isPivoting ? document.getElementById('pivotReason').value.trim() : '';
+
+            // Save learnings to state
+            const state = getState();
+            state.learnings = {
+                customerInsights,
+                surprises,
+                isPivoting,
+                pivotReason
+            };
+
+            // Update validation status
+            if (validationStatus === 'validated') {
+                state.validation.customerConvos = 'validated';
+                state.validation.willingToPay = 'yes';
+            } else {
+                // Keep as uncertain, they need more validation
+                state.validation.customerConvos = 'few';
+                state.validation.willingToPay = 'sounds-cool';
+            }
+
+            saveState(state);
+
+            // Navigate to pitch page to update/confirm their pitch
+            window.location.href = 'step-pitch.html';
+        }
+    </script>
+</body>
+
+</html>

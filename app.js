@@ -17,6 +17,12 @@ function getState() {
       who: '',
       fear: ''
     },
+    learnings: {
+      customerInsights: '',
+      surprises: '',
+      isPivoting: false,
+      pivotReason: ''
+    },
     score: {
       ai: null,
       personalityRead: 0,
@@ -25,6 +31,7 @@ function getState() {
       actionability: 0
     },
     generatedPrompt: '',
+    email: '',
     percentile: 0,
     completedAt: null
   };

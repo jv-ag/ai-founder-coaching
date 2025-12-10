@@ -18,13 +18,15 @@
         </div>
 
         <div style="padding-top: 1rem; text-align: center;">
-            <h1>Your Self-Awareness Assessment</h1>
+            <h1>Your AI Session Results</h1>
 
             <div style="margin: 2rem 0;">
-                <div class="percentile-badge" id="avgScoreBadge"></div>
+                <div class="percentile-badge" id="sessionScoreBadge"></div>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;" id="scoreQuality"></p>
             </div>
 
             <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 2rem 0; text-align: left;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Your Self-Awareness</h3>
                 <p id="interpretation"
                     style="color: var(--text-color); font-size: 0.95rem; line-height: 1.6; margin: 0;"></p>
             </div>
@@ -69,16 +71,30 @@
         window.addEventListener('DOMContentLoaded', () => {
             const state = getState();
 
-            // Calculate average score from ratings
-            const avgScore = (
+            // Calculate total session score (out of 20)
+            const totalScore =
                 state.score.personalityRead +
                 state.score.strategicInsight +
                 state.score.harshHonesty +
-                state.score.actionability
-            ) / 4;
+                state.score.actionability;
 
-            // Display average
-            document.getElementById('avgScoreBadge').textContent = `${avgScore.toFixed(1)} / 5 Stars`;
+            // Display session score
+            document.getElementById('sessionScoreBadge').textContent = `Your session scored ${totalScore}/20`;
+
+            // Add quality interpretation
+            let scoreQuality = '';
+            if (totalScore >= 18) {
+                scoreQuality = '🔥 Exceptional - The AI really understood you';
+            } else if (totalScore >= 15) {
+                scoreQuality = '✨ Great - High-quality coaching session';
+            } else if (totalScore >= 12) {
+                scoreQuality = '👍 Good - Solid insights provided';
+            } else if (totalScore >= 9) {
+                scoreQuality = '⚠️ Mixed - Some value, but room for improvement';
+            } else {
+                scoreQuality = '❌ Poor - Consider trying a different AI or refining your prompt';
+            }
+            document.getElementById('scoreQuality').textContent = scoreQuality;
 
             // Generate interpretation based on assessment answers
             let interpretation = '';
