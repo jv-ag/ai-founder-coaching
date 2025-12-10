@@ -82,6 +82,18 @@
                 btn.textContent = originalText;
             }, 2000);
         }
+
+        function openAI(platform) {
+            // Save which AI they're using for auto-selection on score page
+            saveState({ score: { ...getState().score, ai: platform } });
+
+            const urls = {
+                'claude': 'https://claude.ai/new',
+                'chatgpt': 'https://chat.openai.com/',
+                'gemini': 'https://gemini.google.com/'
+            };
+            window.open(urls[platform], '_blank');
+        }
     </script>
 </body>
 
