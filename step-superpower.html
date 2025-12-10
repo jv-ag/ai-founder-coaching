@@ -17,52 +17,97 @@
             <div class="progress-fill" style="width: 25%;"></div>
         </div>
 
-        <div class="center-content">
+        <div style="padding-top: 1rem;">
             <h1>What's your superpower?</h1>
-            <p>What do you do better than most?</p>
+            <p>Select all that apply - most founders have 1-2 core strengths</p>
 
-            <div class="card-grid">
-                <div class="card"
-                    onclick="saveState({superpower: 'selling'}); selectCard('selling', 'step-validation.html')">
-                    <div class="card-title">Selling / Hustling</div>
-                    <div class="card-subtitle">I can sell anything</div>
+            <div class="card-grid" style="margin-top: 2rem;">
+                <div class="card" onclick="toggleSuperpower('selling')">
+                    <div class="card-title">Selling & Hustling</div>
+                    <div class="card-description">I can talk to anyone and close deals</div>
                 </div>
-
-                <div class="card"
-                    onclick="saveState({superpower: 'building'}); selectCard('building', 'step-validation.html')">
-                    <div class="card-title">Building Things</div>
-                    <div class="card-subtitle">I ship products fast</div>
+                <div class="card" onclick="toggleSuperpower('building')">
+                    <div class="card-title">Building & Shipping</div>
+                    <div class="card-description">I code fast and ship products</div>
                 </div>
-
-                <div class="card"
-                    onclick="saveState({superpower: 'industry'}); selectCard('industry', 'step-validation.html')">
+                <div class="card" onclick="toggleSuperpower('industry')">
                     <div class="card-title">Industry Knowledge</div>
-                    <div class="card-subtitle">I know this space cold</div>
+                    <div class="card-description">I know this space cold</div>
                 </div>
-
-                <div class="card"
-                    onclick="saveState({superpower: 'design'}); selectCard('design', 'step-validation.html')">
-                    <div class="card-title">Design / Creativity</div>
-                    <div class="card-subtitle">I make things beautiful</div>
+                <div class="card" onclick="toggleSuperpower('design')">
+                    <div class="card-title">Design & Creativity</div>
+                    <div class="card-description">I make things beautiful</div>
                 </div>
-
-                <div class="card"
-                    onclick="saveState({superpower: 'operations'}); selectCard('operations', 'step-validation.html')">
-                    <div class="card-title">Operations / Process</div>
-                    <div class="card-subtitle">I optimize everything</div>
+                <div class="card" onclick="toggleSuperpower('operations')">
+                    <div class="card-title">Operations & Process</div>
+                    <div class="card-description">I optimize everything</div>
                 </div>
             </div>
-        </div>
 
-        <div class="flex-row mt-auto" style="margin-bottom: 20px;">
-            <a href="step-profile.html" class="btn btn-secondary" style="width: 48%">Back</a>
-            <button class="btn btn-primary btn-disabled" style="width: 48%">
-                Next <span class="icon-arrow">→</span>
-            </button>
+            <div style="margin-top: 2rem;">
+                <button id="nextBtn" class="btn btn-primary btn-disabled" onclick="continueToNext()">
+                    Continue <span class="icon-arrow">→</span>
+                </button>
+            </div>
         </div>
     </div>
 
     <script src="app.js"></script>
+    <script>
+        let selectedSuperpowers = [];
+
+        // Load saved selections on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const state = getState();
+            if (state.superpowers && state.superpowers.length > 0) {
+                selectedSuperpowers = state.superpowers;
+                // Restore selected state
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    const cardTitle = card.querySelector('.card-title').textContent.toLowerCase();
+                    if (selectedSuperpowers.some(sp => cardTitle.includes(sp))) {
+                        card.classList.add('selected');
+                    }
+                });
+                updateButton();
+            }
+        });
+
+        function toggleSuperpower(value) {
+            const card = event.target.closest('.card');
+
+            if (selectedSuperpowers.includes(value)) {
+                // Deselect
+                selectedSuperpowers = selectedSuperpowers.filter(sp => sp !== value);
+                card.classList.remove('selected');
+            } else {
+                // Select
+                selectedSuperpowers.push(value);
+                card.classList.add('selected');
+            }
+
+            updateButton();
+        }
+
+        function updateButton() {
+            const nextBtn = document.getElementById('nextBtn');
+            if (selectedSuperpowers.length > 0) {
+                nextBtn.classList.remove('btn-disabled');
+            } else {
+                nextBtn.classList.add('btn-disabled');
+            }
+        }
+
+        function continueToNext() {
+            if (selectedSuperpowers.length === 0) return;
+
+            // Save to state
+            saveState({ superpowers: selectedSuperpowers });
+
+            // Navigate
+            window.location.href = 'step-validation.html';
+        }
+    </script>
 </body>
 
 </html>
